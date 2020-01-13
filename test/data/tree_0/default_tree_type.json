@@ -1,0 +1,22 @@
+{
+  "base": {
+    "node_1": {
+      "a": 10,
+      "b": 3.5,
+      "c": [1, 2, 7.5]
+    },
+    "list_leaf": ["hello", "world", "!"],
+    "node_2": {
+      "a": {
+        "node_1": {
+          "node_1": {
+            "a": "this is a deep node"
+          }
+        }
+      }
+    }
+  },
+  "superfluous": {
+    "super superfluous": "heinous"
+  }
+}
