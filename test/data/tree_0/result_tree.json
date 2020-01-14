@@ -3,9 +3,9 @@
     "node_1": {
       "a": 10,
       "b": 3.5,
-      "c": [1, 2, 7.5]
+      "c": [1, 8.5]
     },
-    "list_leaf": ["hello", "world", "!"],
+    "list_leaf": ["hello", "!"],
     "node_2": {
       "a": {
         "node_1": {
@@ -17,6 +17,6 @@
     }
   },
   "superfluous": {
-    "super superfluous": "heinous"
+    "super superfluous": "VERY heinous"
   }
 }

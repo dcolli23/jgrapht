@@ -1,0 +1,9 @@
+{
+  "base": {
+    "node_1": {
+      "b": ["int", "float"],
+      "c": "list"
+    },
+    "list_leaf": "list"
+  }
+}

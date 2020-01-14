@@ -5,3 +5,4 @@ Grapht is a python package meant to make the usage of complex JSON trees for fil
 default values if no value is specified, flattening of the structure, and reversing the flattening 
 of the structure.
 """
+from .grapht import *
