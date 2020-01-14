@@ -12,8 +12,8 @@ import grapht
 DATA_ROOT = os.path.join(ROOT, "..", "data")
 print (DATA_ROOT)
 
-def test_default_parameter_placement():
-  """Tests the placement of default parameters into a user-defined JSON structure"""
+def test_tree_assembly():
+  """Tests the assembly of trees given default, optional, required, and user-specified trees"""
 
   default_trees = []
   optional_tree_types = []
@@ -58,6 +58,13 @@ def test_default_parameter_placement():
 
     assert (grapht.check_equivalence(assembled_tree, result_trees[i])), ("Smoke test failed!"
       " Assembled graph is different from expected result graph!")
-  
+
+def test_tree_flattening():
+  """Tests the flattening of assembled trees"""
+  assert True
+
+def test_tree_reformation():
+  """Tests the reformation of trees after they have been flattened"""
+  assert True
 
 
