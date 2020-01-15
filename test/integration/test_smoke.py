@@ -82,9 +82,12 @@ def test_tree_flattening():
     ([], ['h', 'flat'])
   ]
   flattened_result = grapht.flatten_tree(test_dict)
+
+  print ("flattened result:", flattened_result)
+
   assert (flattened_result == flattened_truth), "The results of flattening do not validate!"
 
-def test_tree_reformation():
+def test_tree_reformation_0():
   """Tests the reformation of trees after they have been flattened"""
   flattened_tree = [
     (['a', 'b'], ['c', 1]),
@@ -109,6 +112,36 @@ def test_tree_reformation():
 
   nested_result = grapht.unflatten_tree(flattened_tree)
 
+  print ("nested result:", nested_result)
+
   assert (nested_result == nested_tree_truth), "The results of unflattening do not validate!"
 
+def test_tree_reformation_1():
+  """Tests the reformation of trees after they have been flattened"""
+  flattened_tree = [
+    (['a', 'b'], ['long_leaf_name', 1]),
+    (['a', 'b', 'd'], ['e', 2]),
+    (['a', 'b', 'd'], ['short_name', 3]),
+    (['a'], ['g', [1, 2]]),
+    ([], ['h', 'flat'])
+  ]
+  nested_tree_truth = {
+    "a": {
+      "b": {
+        "long_leaf_name": 1, 
+        "d": {
+          "e": 2, 
+          "short_name": 3
+        }
+      }, 
+      "g": [1, 2]
+    },
+    "h": "flat"
+  }
+
+  nested_result = grapht.unflatten_tree(flattened_tree)
+
+  print ("nested result:", nested_result)
+
+  assert (nested_result == nested_tree_truth), "The results of unflattening do not validate!"
 
