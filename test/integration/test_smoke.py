@@ -143,5 +143,5 @@ def test_tree_reformation_1():
 
   print ("nested result:", nested_result)
 
-  assert (nested_result == nested_tree_truth), "The results of unflattening do not validate!"
+  assert (grapht.check_equivalence(nested_result, nested_tree_truth)), "The results of unflattening do not validate!"
 

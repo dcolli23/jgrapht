@@ -222,11 +222,10 @@ def unflatten_tree(flattened_tree):
     current_node = nested_tree
 
     # Create all of the non-leaf nodes.
-    for path_list in leaf_tuple[0]:
-      for path_node in path_list:
-        if path_node not in current_node.keys():
-          current_node[path_node] = {}
-        current_node = current_node[path_node]
+    for path_node in leaf_tuple[0]:
+      if path_node not in current_node.keys():
+        current_node[path_node] = {}
+      current_node = current_node[path_node]
 
     # Create the leaf node.
     current_node[leaf_tuple[1][0]] = leaf_tuple[1][1]
