@@ -203,3 +203,34 @@ def flatten_tree(tree):
   full_path_to_leaves = []
   __recurs_flatten_tree(tree, full_path_to_leaves)
   return full_path_to_leaves
+
+def unflatten_tree(flattened_tree):
+  """Returns the nested tree form described by the given flattened tree
+  
+  Inputs:
+    flattened_tree - list of tuples. This is the list of tuples returned by the function 
+                     flatten_tree()
+  
+  Returns:
+    nested_tree - nested dict. The tree structure in the nested dictionary form.
+  """
+  # Create our nested tree.
+  nested_tree = {}
+
+  for leaf_tuple in flattened_tree:
+    # Set the current node as the root of the tree.
+    current_node = nested_tree
+
+    # Create all of the non-leaf nodes.
+    for path_list in leaf_tuple[0]:
+      for path_node in path_list:
+        if path_node not in current_node.keys():
+          current_node[path_node] = {}
+        current_node = current_node[path_node]
+
+    # Create the leaf node.
+    current_node[leaf_tuple[1][0]] = leaf_tuple[1][1]
+  
+  return nested_tree
+
+    

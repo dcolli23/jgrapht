@@ -86,6 +86,29 @@ def test_tree_flattening():
 
 def test_tree_reformation():
   """Tests the reformation of trees after they have been flattened"""
-  assert True
+  flattened_tree = [
+    (['a', 'b'], ('c', 1)),
+    (['a', 'b', 'd'], ('e', 2)),
+    (['a', 'b', 'd'], ('f', 3)),
+    (['a'], ('g', [1, 2])),
+    ([], ('h', 'flat'))
+  ]
+  nested_tree_truth = {
+    "a": {
+      "b": {
+        "c": 1, 
+        "d": {
+          "e": 2, 
+          "f": 3
+        }
+      }, 
+      "g": [1, 2]
+    },
+    "h": "flat"
+  }
+
+  nested_result = grapht.unflatten_tree(flattened_tree)
+
+  assert (nested_result == nested_tree_truth), "The results of unflattening do not validate!"
 
 
