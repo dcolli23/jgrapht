@@ -75,11 +75,11 @@ def test_tree_flattening():
     "h": "flat"
   }
   flattened_truth = [
-    (['a', 'b'], ('c', 1)),
-    (['a', 'b', 'd'], ('e', 2)),
-    (['a', 'b', 'd'], ('f', 3)),
-    (['a'], ('g', [1, 2])),
-    ([], ('h', 'flat'))
+    (['a', 'b'], ['c', 1]),
+    (['a', 'b', 'd'], ['e', 2]),
+    (['a', 'b', 'd'], ['f', 3]),
+    (['a'], ['g', [1, 2]]),
+    ([], ['h', 'flat'])
   ]
   flattened_result = grapht.flatten_tree(test_dict)
   assert (flattened_result == flattened_truth), "The results of flattening do not validate!"
@@ -87,11 +87,11 @@ def test_tree_flattening():
 def test_tree_reformation():
   """Tests the reformation of trees after they have been flattened"""
   flattened_tree = [
-    (['a', 'b'], ('c', 1)),
-    (['a', 'b', 'd'], ('e', 2)),
-    (['a', 'b', 'd'], ('f', 3)),
-    (['a'], ('g', [1, 2])),
-    ([], ('h', 'flat'))
+    (['a', 'b'], ['c', 1]),
+    (['a', 'b', 'd'], ['e', 2]),
+    (['a', 'b', 'd'], ['f', 3]),
+    (['a'], ['g', [1, 2]]),
+    ([], ['h', 'flat'])
   ]
   nested_tree_truth = {
     "a": {

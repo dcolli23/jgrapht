@@ -184,7 +184,7 @@ def __recurs_flatten_tree(tree, full_path_to_leaves, key=None, this_path_to_leaf
   else:
     # This is a leaf. We need to append a tuple describing the path to the leaf and leaf value.
     full_path_to_leaves.append(
-      (this_path_to_leaf, (key, tree[key]))
+      (this_path_to_leaf, [key, tree[key]])
     )
 
 
