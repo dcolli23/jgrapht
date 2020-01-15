@@ -156,3 +156,50 @@ def check_equivalence(tree_1, tree_2, key=None, verbose=False):
       is_equivalent = (is_equivalent and (tree_1[key] == tree_2[key]))
   
   return is_equivalent
+
+def __recurs_flatten_tree(tree, full_path_to_leaves, key=None, this_path_to_leaf=[]):
+  """Modifies full_path_to_leaves in place to give list of paths, names, and values of all leaves
+  
+  Inputs:
+    tree - dict. The tree to be flattened.
+    full_path_to_leaves - list. List that contains all of the paths, names, and values to all leaves
+                          in the tree. Modified in place so should be given as an empty list when
+                          function is first called.
+    key - dictionary key. The key of the node we're currently visiting.
+    this_path_to_leaf - list. The path to the node we're currently visiting.
+  
+  Returns:
+    No return
+  """
+  if key is None:
+    for sub_key in tree.keys():
+      __recurs_flatten_tree(tree, full_path_to_leaves, key=sub_key, 
+        this_path_to_leaf=this_path_to_leaf)
+  elif isinstance(tree[key], dict):
+    tree = tree[key]
+    this_path_to_leaf = this_path_to_leaf + [key]
+    for sub_key in tree.keys():
+      __recurs_flatten_tree(tree, full_path_to_leaves, key=sub_key, 
+        this_path_to_leaf=this_path_to_leaf)
+  else:
+    # This is a leaf. We need to append a tuple describing the path to the leaf and leaf value.
+    full_path_to_leaves.append(
+      (this_path_to_leaf, (key, tree[key]))
+    )
+
+
+def flatten_tree(tree):
+  """Returns a list containing paths, names, and values of all leaves in the tree
+  
+  Inputs:
+    tree - dict. The tree to be flattened.
+  
+  Returns:
+    full_path_to_leaves - list. List of leaves in the tree where zeroth index of list a list 
+                          containing the path to the leaf, first index of the list is a tuple that
+                          containes (name_of_leaf_key, leaf_value).
+  """
+  # Form the list that we're going to modify in place using the recursive flatten tree function.
+  full_path_to_leaves = []
+  __recurs_flatten_tree(tree, full_path_to_leaves)
+  return full_path_to_leaves

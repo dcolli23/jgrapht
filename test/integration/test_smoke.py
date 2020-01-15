@@ -61,7 +61,28 @@ def test_tree_assembly():
 
 def test_tree_flattening():
   """Tests the flattening of assembled trees"""
-  assert True
+  test_dict = {
+    "a": {
+      "b": {
+        "c": 1, 
+        "d": {
+          "e": 2, 
+          "f": 3
+        }
+      }, 
+      "g": [1, 2]
+    },
+    "h": "flat"
+  }
+  flattened_truth = [
+    (['a', 'b'], ('c', 1)),
+    (['a', 'b', 'd'], ('e', 2)),
+    (['a', 'b', 'd'], ('f', 3)),
+    (['a'], ('g', [1, 2])),
+    ([], ('h', 'flat'))
+  ]
+  flattened_result = grapht.flatten_tree(test_dict)
+  assert (flattened_result == flattened_truth), "The results of flattening do not validate!"
 
 def test_tree_reformation():
   """Tests the reformation of trees after they have been flattened"""
