@@ -209,7 +209,8 @@ def flatten_tree(tree):
   """
   # Form the list that we're going to modify in place using the recursive flatten tree function.
   full_path_to_leaves = []
-  __recurs_flatten_tree(tree, full_path_to_leaves)
+  for key in tree.keys():
+    __recurs_flatten_tree(tree, full_path_to_leaves, key=key)
   return full_path_to_leaves
 
 def unflatten_tree(flattened_tree):
@@ -229,14 +230,52 @@ def unflatten_tree(flattened_tree):
     # Set the current node as the root of the tree.
     current_node = nested_tree
 
-    # Create all of the non-leaf nodes.
-    for path_node in leaf_tuple[0]:
-      if path_node not in current_node.keys():
-        current_node[path_node] = {}
-      current_node = current_node[path_node]
+    # Loop through all of the path lists.
+    for i, path_list in enumerate(leaf_tuple[0]):
+      for j, path_node in enumerate(path_list):
+        # Find out if this is going to be a list.
+        if j < len(path_list) - 1:
+          if isinstance(path_list[j + 1], int): # Indicates this is a list.
+            new_node_is_list = True
+          else:
+            new_node_is_list = False
+        else:
+          new_node_is_list = False
+        
+        if new_node_is_list:
+          if isinstance(path_node, str):
+            current_node[path_node] = []
+          else:
+            current_node.append([])
+            current_node = current_node[path_node]
+        else:
+          if path_node not in current_node.keys():
+            current_node[path_node] = {}
+          current_node = current_node[path_node]
 
-    # Create the leaf node.
-    current_node[leaf_tuple[1][0]] = leaf_tuple[1][1]
+
+
+
+      # if isinstance(path_list[-1], int): # Indicates that this is a list node.
+      #   if isinstance(current_node, dict):
+      #     current_node[path_list[0]] = []
+      #   else isinstance(current_node, list):
+      #     current_node.append([])
+      # else:
+      #   for path_node in path_list:
+      #     if path_node not in current_node.keys():
+      #       current_node[path_node] = {}
+      #     current_node = path_node
+
+
+    # Create all of the non-leaf nodes.
+    # for path_node in leaf_tuple[0]:
+    #   if path_node not in current_node.keys():
+    #     current_node[path_node] = {}
+    #   current_node = current_node[path_node]
+
+    # # Create the leaf node.
+    # current_node[leaf_tuple[1][0]] = leaf_tuple[1][1]
   
   return nested_tree
 
