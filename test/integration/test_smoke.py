@@ -59,7 +59,7 @@ def test_tree_assembly():
     assert (grapht.check_equivalence(assembled_tree, result_trees[i])), ("Smoke test failed!"
       " Assembled graph is different from expected result graph!")
 
-def test_tree_flattening():
+def test_tree_flattening_0():
   """Tests the flattening of assembled trees"""
   test_dict = {
     "a": {
@@ -75,11 +75,69 @@ def test_tree_flattening():
     "h": "flat"
   }
   flattened_truth = [
-    (['a', 'b'], ['c', 1]),
-    (['a', 'b', 'd'], ['e', 2]),
-    (['a', 'b', 'd'], ['f', 3]),
-    (['a'], ['g', [1, 2]]),
-    ([], ['h', 'flat'])
+    ([['a', 'b']], ['c', 1]),
+    ([['a', 'b', 'd']], ['e', 2]),
+    ([['a', 'b', 'd']], ['f', 3]),
+    ([['a'], ['g', 0]], [None, 1]),
+    ([['a'], ['g', 1]], [None, 2]),
+    ([[]], ['h', 'flat'])
+  ]
+  flattened_result = grapht.flatten_tree(test_dict)
+
+  print ("flattened result:", flattened_result)
+
+  assert (flattened_result == flattened_truth), "The results of flattening do not validate!"
+
+def test_tree_flattening_1():
+  test_dict = {
+    "m_kinetics": {
+      "m_no_of_cb_states": 2,
+      "scheme": [
+      {
+        "state": 1,
+        "type": "d",
+        "transition":
+        [
+        {
+          "new_state": 2,
+          "rate_type": "gaussian",
+          "rate_parameters": [100, 0, 3]
+        }
+        ]
+      },
+      {
+        "state": 2,
+        "type": "a",
+        "cb_extension": 4.0,
+        "transition":
+        [
+        {
+          "new_state": 1,
+          "rate_type": "poly",
+          "rate_parameters": [100, 1, 4]
+        }
+        ]
+      }
+    ]
+    }
+  }
+  flattened_truth = [
+    ([["m_kinetics"]], ["m_no_of_cb_states", 2]),
+    ([["m_kinetics"], ["scheme", 0]], ["state", 1]), # Intermediary lists can be as nested as we want with this structure.
+    ([["m_kinetics"], ["scheme", 0]], ["type", "d"]),
+    ([["m_kinetics"], ["scheme", 0], ["transition", 0]], ["new_state", 2]),
+    ([["m_kinetics"], ["scheme", 0], ["transition", 0]], ["rate_type", "gaussian"]),
+    ([["m_kinetics"], ["scheme", 0], ["transition", 0], ["rate_parameters", 0]], [None, 100]), # None indicates that this is a list element, not a leaf node.
+    ([["m_kinetics"], ["scheme", 0], ["transition", 0], ["rate_parameters", 1]], [None, 0]),
+    ([["m_kinetics"], ["scheme", 0], ["transition", 0], ["rate_parameters", 2]], [None, 3]),
+    ([["m_kinetics"], ["scheme", 1]], ["state", 2]),
+    ([["m_kinetics"], ["scheme", 1]], ["type", "a"]),
+    ([["m_kinetics"], ["scheme", 1]], ["cb_extension", 4.0]),
+    ([["m_kinetics"], ["scheme", 1], ["transition", 0]], ["new_state", 1]),
+    ([["m_kinetics"], ["scheme", 1], ["transition", 0]], ["rate_type", "poly"]),
+    ([["m_kinetics"], ["scheme", 1], ["transition", 0], ["rate_parameters", 0]], [None, 100]),
+    ([["m_kinetics"], ["scheme", 1], ["transition", 0], ["rate_parameters", 1]], [None, 1]),
+    ([["m_kinetics"], ["scheme", 1], ["transition", 0], ["rate_parameters", 2]], [None, 4])
   ]
   flattened_result = grapht.flatten_tree(test_dict)
 

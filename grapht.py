@@ -157,7 +157,7 @@ def check_equivalence(tree_1, tree_2, key=None, verbose=False):
   
   return is_equivalent
 
-def __recurs_flatten_tree(tree, full_path_to_leaves, key=None, this_path_to_leaf=[]):
+def __recurs_flatten_tree(tree, full_path_to_leaves, key=None, this_path_to_leaf=[[]]):
   """Modifies full_path_to_leaves in place to give list of paths, names, and values of all leaves
   
   Inputs:
@@ -171,22 +171,30 @@ def __recurs_flatten_tree(tree, full_path_to_leaves, key=None, this_path_to_leaf
   Returns:
     No return
   """
-  if key is None:
-    for sub_key in tree.keys():
-      __recurs_flatten_tree(tree, full_path_to_leaves, key=sub_key, 
-        this_path_to_leaf=this_path_to_leaf)
-  elif isinstance(tree[key], dict):
+  # Traverse the node.
+  if key is not None:
     tree = tree[key]
-    this_path_to_leaf = this_path_to_leaf + [key]
+      
+  if isinstance(tree, dict):
+    this_new_path_to_leaf = copy.deepcopy(this_path_to_leaf)
+    if key is not None: # Catching if this was called on a tree without a root node.
+      this_new_path_to_leaf[-1].append(key)
+
     for sub_key in tree.keys():
+      # this_new_path_to_leaf = copy.deepcopy(this_path_to_leaf)
+      # this_new_path_to_leaf[0].append(sub_key)
       __recurs_flatten_tree(tree, full_path_to_leaves, key=sub_key, 
-        this_path_to_leaf=this_path_to_leaf)
+        this_path_to_leaf=this_new_path_to_leaf)
+  elif isinstance(tree, list):
+    for i in range(len(tree)):
+      this_new_path_to_leaf = copy.deepcopy(this_path_to_leaf)
+      this_new_path_to_leaf.append([key, i])
+      __recurs_flatten_tree(tree[i], full_path_to_leaves, this_path_to_leaf=this_new_path_to_leaf)
   else:
     # This is a leaf. We need to append a tuple describing the path to the leaf and leaf value.
     full_path_to_leaves.append(
-      (this_path_to_leaf, [key, tree[key]])
+      (this_path_to_leaf, [key, tree])
     )
-
 
 def flatten_tree(tree):
   """Returns a list containing paths, names, and values of all leaves in the tree
