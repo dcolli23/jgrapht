@@ -157,7 +157,7 @@ def check_equivalence(tree_1, tree_2, key=None, verbose=False):
   
   return is_equivalent
 
-def __recurs_flatten_tree(tree, full_path_to_leaves, key=None, this_path_to_leaf=[[]]):
+def __recurs_flatten_tree(tree, full_path_to_leaves, key=None, this_path_to_leaf=[]):
   """Modifies full_path_to_leaves in place to give list of paths, names, and values of all leaves
   
   Inputs:
@@ -171,25 +171,42 @@ def __recurs_flatten_tree(tree, full_path_to_leaves, key=None, this_path_to_leaf
   Returns:
     No return
   """
+  # if key is None:
+  #   for sub_key in tree.keys():
+  #     __recurs_flatten_tree(tree, full_path_to_leaves, key=sub_key, 
+  #       this_path_to_leaf=this_path_to_leaf)
+  # elif isinstance(tree[key], dict):
+  #   tree = tree[key]
+  #   this_path_to_leaf = this_path_to_leaf + [key]
+  #   for sub_key in tree.keys():
+  #     __recurs_flatten_tree(tree, full_path_to_leaves, key=sub_key, 
+  #       this_path_to_leaf=this_path_to_leaf)
+  # elif isinstance(tree[key], list):
+  #   tree = tree[key]
+  #   for idx in range(len(tree)):
+  #     __recurs_flatten_tree(tree, full_path_to_leaves, key=idx, 
+  #       this_path_to_leaf=)
+  # else:
+  #   # This is a leaf. We need to append a tuple describing the path to the leaf and leaf value.
+  #   full_path_to_leaves.append(
+  #     (this_path_to_leaf, [key, tree[key]])
+  #   )
+
   # Traverse the node.
   if key is not None:
     tree = tree[key]
       
   if isinstance(tree, dict):
-    this_new_path_to_leaf = copy.deepcopy(this_path_to_leaf)
     if key is not None: # Catching if this was called on a tree without a root node.
-      this_new_path_to_leaf[-1].append(key)
-
+      this_path_to_leaf.append(key)
     for sub_key in tree.keys():
-      # this_new_path_to_leaf = copy.deepcopy(this_path_to_leaf)
-      # this_new_path_to_leaf[0].append(sub_key)
       __recurs_flatten_tree(tree, full_path_to_leaves, key=sub_key, 
-        this_path_to_leaf=this_new_path_to_leaf)
+        this_path_to_leaf=this_path_to_leaf.copy())
   elif isinstance(tree, list):
-    for i in range(len(tree)):
-      this_new_path_to_leaf = copy.deepcopy(this_path_to_leaf)
-      this_new_path_to_leaf.append([key, i])
-      __recurs_flatten_tree(tree[i], full_path_to_leaves, this_path_to_leaf=this_new_path_to_leaf)
+    this_path_to_leaf.append(key)
+    for idx in range(len(tree)):
+      __recurs_flatten_tree(tree, full_path_to_leaves, key=idx, 
+        this_path_to_leaf=this_path_to_leaf.copy())
   else:
     # This is a leaf. We need to append a tuple describing the path to the leaf and leaf value.
     full_path_to_leaves.append(
@@ -209,8 +226,7 @@ def flatten_tree(tree):
   """
   # Form the list that we're going to modify in place using the recursive flatten tree function.
   full_path_to_leaves = []
-  for key in tree.keys():
-    __recurs_flatten_tree(tree, full_path_to_leaves, key=key)
+  __recurs_flatten_tree(tree, full_path_to_leaves)
   return full_path_to_leaves
 
 def unflatten_tree(flattened_tree):
@@ -229,53 +245,47 @@ def unflatten_tree(flattened_tree):
   for leaf_tuple in flattened_tree:
     # Set the current node as the root of the tree.
     current_node = nested_tree
+    leaf_name = leaf_tuple[1][0]
+    leaf_value = leaf_tuple[1][1]
 
-    # Loop through all of the path lists.
-    for i, path_list in enumerate(leaf_tuple[0]):
-      for j, path_node in enumerate(path_list):
-        # Find out if this is going to be a list.
-        if j < len(path_list) - 1:
-          if isinstance(path_list[j + 1], int): # Indicates this is a list.
-            new_node_is_list = True
+    if len(leaf_tuple[0]) > 0:
+      # Make the full path to this particular leaf.
+      full_leaf_path = leaf_tuple[0] + [leaf_name]
+
+      node_0 = full_leaf_path[0]
+      for idx in range(1, len(full_leaf_path)):
+        node_1 = full_leaf_path[idx]
+
+        # If the next node is an integer, we make a list.
+        if isinstance(node_1, int):
+          if isinstance(current_node, dict):
+            if node_0 not in current_node.keys():
+              current_node[node_0] = []
+          elif isinstance(current_node, list):
+            current_node.append( [] )
           else:
-            new_node_is_list = False
-        else:
-          new_node_is_list = False
-        
-        if new_node_is_list:
-          if isinstance(path_node, str):
-            current_node[path_node] = []
-          else:
-            current_node.append([])
-            current_node = current_node[path_node]
-        else:
-          if path_node not in current_node.keys():
-            current_node[path_node] = {}
-          current_node = current_node[path_node]
+            # current_node[node_0].append([])
+            raise RuntimeError
+        # Otherwise, we make an object.
+        elif isinstance(node_1, str):
+          if isinstance(current_node, dict):
+            # Check if the node_0 is already a key in this dictionary
+            if node_0 not in current_node.keys():
+              print ("Inserting dictionary for key:", node_0)
+              current_node[node_0] = {}
+          elif isinstance(current_node, list):
+            # Check to see if the list index already exists
+            if node_0 >= len(current_node):
+              print ("Inserting dictionary for key: {}".format(node_0))
+              current_node.append({})
 
-
-
-
-      # if isinstance(path_list[-1], int): # Indicates that this is a list node.
-      #   if isinstance(current_node, dict):
-      #     current_node[path_list[0]] = []
-      #   else isinstance(current_node, list):
-      #     current_node.append([])
-      # else:
-      #   for path_node in path_list:
-      #     if path_node not in current_node.keys():
-      #       current_node[path_node] = {}
-      #     current_node = path_node
-
-
-    # Create all of the non-leaf nodes.
-    # for path_node in leaf_tuple[0]:
-    #   if path_node not in current_node.keys():
-    #     current_node[path_node] = {}
-    #   current_node = current_node[path_node]
-
-    # # Create the leaf node.
-    # current_node[leaf_tuple[1][0]] = leaf_tuple[1][1]
+        current_node = current_node[node_0]
+        node_0 = node_1
+    
+    if isinstance(current_node, dict):
+      current_node[leaf_name] = leaf_value
+    else:
+      current_node.append(leaf_value)
   
   return nested_tree
 
