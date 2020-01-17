@@ -171,27 +171,6 @@ def __recurs_flatten_tree(tree, full_path_to_leaves, key=None, this_path_to_leaf
   Returns:
     No return
   """
-  # if key is None:
-  #   for sub_key in tree.keys():
-  #     __recurs_flatten_tree(tree, full_path_to_leaves, key=sub_key, 
-  #       this_path_to_leaf=this_path_to_leaf)
-  # elif isinstance(tree[key], dict):
-  #   tree = tree[key]
-  #   this_path_to_leaf = this_path_to_leaf + [key]
-  #   for sub_key in tree.keys():
-  #     __recurs_flatten_tree(tree, full_path_to_leaves, key=sub_key, 
-  #       this_path_to_leaf=this_path_to_leaf)
-  # elif isinstance(tree[key], list):
-  #   tree = tree[key]
-  #   for idx in range(len(tree)):
-  #     __recurs_flatten_tree(tree, full_path_to_leaves, key=idx, 
-  #       this_path_to_leaf=)
-  # else:
-  #   # This is a leaf. We need to append a tuple describing the path to the leaf and leaf value.
-  #   full_path_to_leaves.append(
-  #     (this_path_to_leaf, [key, tree[key]])
-  #   )
-
   # Traverse the node.
   if key is not None:
     tree = tree[key]
@@ -258,26 +237,17 @@ def unflatten_tree(flattened_tree):
 
         # If the next node is an integer, we make a list.
         if isinstance(node_1, int):
-          if isinstance(current_node, dict):
-            if node_0 not in current_node.keys():
-              current_node[node_0] = []
+          if (isinstance(current_node, dict) and (node_0 not in current_node.keys())):
+            current_node[node_0] = []
           elif isinstance(current_node, list):
             current_node.append( [] )
-          else:
-            # current_node[node_0].append([])
-            raise RuntimeError
+
         # Otherwise, we make an object.
         elif isinstance(node_1, str):
-          if isinstance(current_node, dict):
-            # Check if the node_0 is already a key in this dictionary
-            if node_0 not in current_node.keys():
-              print ("Inserting dictionary for key:", node_0)
-              current_node[node_0] = {}
-          elif isinstance(current_node, list):
-            # Check to see if the list index already exists
-            if node_0 >= len(current_node):
-              print ("Inserting dictionary for key: {}".format(node_0))
-              current_node.append({})
+          if (isinstance(current_node, dict) and (node_0 not in current_node.keys())):
+            current_node[node_0] = {}
+          elif (isinstance(current_node, list) and (node_0 >= len(current_node))):
+            current_node.append({})
 
         current_node = current_node[node_0]
         node_0 = node_1
