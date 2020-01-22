@@ -28,11 +28,13 @@ Thank you for considering contributing to the Grapht project! Please contact Dyl
 
 Grapht uses the [PyTest](https://docs.pytest.org/en/latest/index.html) framework for validation of functionality. PyTest is not part of Python's standard library and thus needs to be installed before validation of changes can be done. To do so, visit [this page](https://docs.pytest.org/en/latest/getting-started.html) to install PyTest.
 
-### Unit Tests
+### Validation Tests
 It is important to validate any code before it is committed (and develop new validation tests as appropriate!). To run a full validation test for the project, execute the following from the project's root directory:
 ```
-$ python test/unit/test.py
+$ pytest
 ```
+
+If you would like to view the output of the tests, simply add `-s` to the previous command.
 
 # Community
 
@@ -40,13 +42,13 @@ Hello! Thanks for taking the time to read through the documentation to learn mor
 
 ### Contribution
 
-Your contributions are always welcome and appreciated. Following are the things you can do to contribute to this project.
+Your contributions are always welcome and appreciated. Following are the things you can do to contribute to this project:
 
 1. **Report a bug**
-If you think you have encountered a bug, and I should know about it, feel free to report it using the "Issues" tab in the bitbucket repository and I will take care of it.
+If you think you have encountered a bug, feel free to report it using the "Issues" tab in the bitbucket repository and I will take care of it.
 
 2. **Request a feature**
-You can also request for a feature using the issue tracker by selecting "proposal" when prompted by the "Kind" dialogue.
+You can also request the addition of a feature using the issue tracker by selecting "proposal" when prompted by the "Kind" dialogue.
 
 # Credit/Acknowledgment
 The following is a list of contributors to the Grapht project
