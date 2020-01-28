@@ -5,9 +5,9 @@ import sys
 import json
 
 ROOT = os.path.realpath(os.path.dirname(__file__))
-PACKAGE_ROOT = os.path.join(ROOT, "..", "..", "..")
+PACKAGE_ROOT = os.path.join(ROOT, "..", "..")
 sys.path.append(PACKAGE_ROOT)
-import grapht
+import jgrapht
 
 DATA_ROOT = os.path.join(ROOT, "..", "data")
 print (DATA_ROOT)
@@ -49,14 +49,14 @@ def test_tree_assembly():
     
   # Form the trees and check for equivalence with the expected result trees.
   for i in range(len(default_trees)):
-    parser = grapht.GraphtParser()
+    parser = jgrapht.GraphtParser()
     parser.add_default_input(default_trees[i])
     parser.add_optional_input_types(optional_tree_types[i])
     parser.add_required_input_types(required_tree_types[i])
     parser.add_user_input(user_specified_trees[i])
     assembled_tree = parser.assemble_tree()
 
-    assert (grapht.check_equivalence(assembled_tree, result_trees[i])), ("Smoke test failed!"
+    assert (jgrapht.check_equivalence(assembled_tree, result_trees[i])), ("Smoke test failed!"
       " Assembled graph is different from expected result graph!")
 
 def test_tree_flattening_0():
@@ -82,7 +82,7 @@ def test_tree_flattening_0():
     (['a', 'g'], [1, 2]),
     ([], ['h', 'flat'])
   ]
-  flattened_result = grapht.flatten_tree(test_dict)
+  flattened_result = jgrapht.flatten_tree(test_dict)
 
   print ("flattened result:", flattened_result)
 
@@ -139,7 +139,7 @@ def test_tree_flattening_1():
     (["m_kinetics", "scheme", 1, "transition", 0, "rate_parameters"], [1, 1]),
     (["m_kinetics", "scheme", 1, "transition", 0, "rate_parameters"], [2, 4])
   ]
-  flattened_result = grapht.flatten_tree(test_dict)
+  flattened_result = jgrapht.flatten_tree(test_dict)
 
   print ("flattened result:", flattened_result)
 
@@ -169,7 +169,7 @@ def test_tree_reformation_0():
     "h": "flat"
   }
 
-  nested_result = grapht.unflatten_tree(flattened_tree)
+  nested_result = jgrapht.unflatten_tree(flattened_tree)
 
   print ("nested result:", nested_result)
 
@@ -199,11 +199,11 @@ def test_tree_reformation_1():
     "h": "flat"
   }
 
-  nested_result = grapht.unflatten_tree(flattened_tree)
+  nested_result = jgrapht.unflatten_tree(flattened_tree)
 
   print ("nested result:", nested_result)
 
-  assert (grapht.check_equivalence(nested_result, nested_tree_truth)), "The results of unflattening do not validate!"
+  assert (jgrapht.check_equivalence(nested_result, nested_tree_truth)), "The results of unflattening do not validate!"
 
 def test_tree_reformation_2():
   nested_tree_truth = {
@@ -256,8 +256,8 @@ def test_tree_reformation_2():
     (["m_kinetics", "scheme", 1, "transition", 0, "rate_parameters"], [1, 1]),
     (["m_kinetics", "scheme", 1, "transition", 0, "rate_parameters"], [2, 4])
   ]
-  nested_result = grapht.unflatten_tree(flattened_tree)
+  nested_result = jgrapht.unflatten_tree(flattened_tree)
 
   print ("nested result:", nested_result)
 
-  assert (grapht.check_equivalence(nested_result, nested_tree_truth)), "The results of unflattening do not validate!"
+  assert (jgrapht.check_equivalence(nested_result, nested_tree_truth)), "The results of unflattening do not validate!"
